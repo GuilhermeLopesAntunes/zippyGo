@@ -20,7 +20,7 @@ public class TokenService {
     public String generateToken(String username, UserRole roles){
         return Jwts.builder()
                 .setSubject(username)
-                .claim("roles", roles) // Inclui as roles no payload
+                .claim("roles", List.of(roles.name()))  // Corrigido para "roles" e usando a lista
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SECRET_KEY)
                 .compact();
@@ -42,13 +42,12 @@ public class TokenService {
                 .parseClaimsJws(token)
                 .getBody();
 
-        // Verifica se a claim "roles" está presente e se é uma lista
         Object rolesObj = claims.get("roles");
         if (rolesObj instanceof List<?>) {
             return (List<String>) rolesObj;
         }
 
-        return null; // Ou você pode lançar uma exceção caso não seja uma lista válida
+        return null;
     }
 
     public boolean validateToken(String token) {
@@ -59,7 +58,6 @@ public class TokenService {
                     .parseClaimsJws(token); // Se a análise for bem-sucedida, o token é válido
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            // Se o token for inválido ou expirado, lança uma exceção
             return false;
         }
     }

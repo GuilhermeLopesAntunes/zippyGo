@@ -24,10 +24,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/auth/login/**", "/auth/register/**", "/api/users/**").permitAll()
-                        .requestMatchers("/api/trophies/**").authenticated()
-                        .requestMatchers("/professor/**").hasAuthority("PROFESSOR") // Usando hasAuthority em vez de hasRole
-                        .requestMatchers("/student/**").hasAuthority("STUDENT")  // Usando hasAuthority em vez de hasRole
+                        .requestMatchers("/auth/login/**", "/auth/register/**", "/api/**").permitAll()
+                        //.requestMatchers("/api/trophies/**").authenticated()
+                        .requestMatchers("/professor/**").hasRole("PROFESSOR")
+                        .requestMatchers("/student/**").hasRole("STUDENT")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

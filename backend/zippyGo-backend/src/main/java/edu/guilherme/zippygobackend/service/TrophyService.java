@@ -34,9 +34,6 @@ public class TrophyService {
             t.setImage(updated.getImage());
             t.setPoints(updated.getPoints());
             t.setRarity(updated.getRarity());
-            t.setType(updated.getType());
-            t.setSecret(updated.isSecret());
-            t.setRequirements(updated.getRequirements());
             return trophyRepository.save(t);
         });
 

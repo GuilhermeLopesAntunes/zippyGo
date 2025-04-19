@@ -16,9 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -40,6 +37,7 @@ public class AuthService {
 
         userRepository.save(user);
     }
+
     public void registerProfessor(@Valid RegisterProfessorDTO data){
         var user = new Professor();
         user.setName(data.name());

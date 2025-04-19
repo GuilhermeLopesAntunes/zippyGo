@@ -1,33 +1,41 @@
 package edu.guilherme.zippygobackend.controller;
 
+import edu.guilherme.zippygobackend.dto.StudentAssociationRequest;
+import edu.guilherme.zippygobackend.model.Student;
 import edu.guilherme.zippygobackend.service.ProfessorService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/professor")
+    @RequestMapping("/professor")
 @RequiredArgsConstructor
 public class ProfessorController {
     private final ProfessorService professorService;
 
     @GetMapping("/teste")
-    public void test(){
+    public void test() {
         System.out.println("Funcionando");
     }
 
-    @PostMapping("/{professorId}/alunos/{studentId}")
-    public ResponseEntity <String> addStudentToProfessor(@PathVariable UUID professorId, @PathVariable UUID studentId) {
-        professorService.linkProfessorToStudent(professorId, studentId);
-        return ResponseEntity.ok("Aluno adicionado com sucesso");
+    @PostMapping("/{professorId}/students")
+    public ResponseEntity<String> addStudentsToProfessor(
+            @PathVariable UUID professorId,
+            @RequestBody StudentAssociationRequest request
+    ) {
+        professorService.linkProfessorToStudent(professorId, request.studentIds());
+        return ResponseEntity.ok("Alunos adicionados com sucesso");
     }
 
-    @DeleteMapping("/{professorId}/alunos/{studentId}")
-    public ResponseEntity<String> removeStudentFromProfessor(@PathVariable UUID professorId, @PathVariable UUID studentId) {
-        professorService.unlinkProfessorFromStudent(professorId, studentId);
-        return ResponseEntity.ok("Aluno removido com sucesso");
+    @DeleteMapping("/{professorId}/alunos")
+    public ResponseEntity<String> removeStudentsFromProfessor(
+            @PathVariable UUID professorId,
+            @RequestBody StudentAssociationRequest request
+    ) {
+        professorService.unlinkProfessorFromStudents(professorId, request.studentIds());
+        return ResponseEntity.ok("Alunos removidos com sucesso");
     }
 }

@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,9 +24,8 @@ public class Trophy {
     private int points;
     @Enumerated(EnumType.STRING)
     private Rarity rarity;
-    private String type;
-    private boolean isSecret;
-    private String requirements;
 
+    @ManyToMany(mappedBy = "trophies")
+    private Set<Student> students = new HashSet<>();
 
 }

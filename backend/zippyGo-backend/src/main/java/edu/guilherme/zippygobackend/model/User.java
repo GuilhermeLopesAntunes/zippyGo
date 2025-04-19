@@ -33,12 +33,12 @@ public abstract class User implements UserDetails {
     @Column(nullable = true)
     private UserRole role;
 
-
     public User(String name, String username, String password, String email, UserRole role) {
         this.name = name;
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = role; // Certifica-se de que o papel seja atribuído corretamente.
     }
 
     @Override
@@ -56,7 +56,6 @@ public abstract class User implements UserDetails {
         return username;
     }
 
-    // Os métodos abaixo servem para indicar se a conta está ativa
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -77,4 +76,3 @@ public abstract class User implements UserDetails {
         return true;
     }
 }
-
