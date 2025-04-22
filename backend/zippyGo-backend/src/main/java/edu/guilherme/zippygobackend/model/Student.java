@@ -1,5 +1,6 @@
 package edu.guilherme.zippygobackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import edu.guilherme.zippygobackend.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -66,5 +67,9 @@ public class Student extends User {
     )
     private Set<Trophy> trophies = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "classroom_id")
+    @JsonBackReference  // Evita que o "back" da relação seja serializado
+    private ClassRoom classroom;
 
 }

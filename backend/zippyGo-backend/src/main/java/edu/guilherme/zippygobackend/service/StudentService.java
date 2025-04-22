@@ -1,13 +1,7 @@
 package edu.guilherme.zippygobackend.service;
 
-import edu.guilherme.zippygobackend.model.Skin;
-import edu.guilherme.zippygobackend.model.Student;
-import edu.guilherme.zippygobackend.model.Title;
-import edu.guilherme.zippygobackend.model.Trophy;
-import edu.guilherme.zippygobackend.repository.SkinRepository;
-import edu.guilherme.zippygobackend.repository.StudentRepository;
-import edu.guilherme.zippygobackend.repository.TitleRepository;
-import edu.guilherme.zippygobackend.repository.TrophyRepository;
+import edu.guilherme.zippygobackend.model.*;
+import edu.guilherme.zippygobackend.repository.*;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +16,9 @@ public class StudentService {
     private final SkinRepository skinRepository;
     private final TitleRepository titleRepository;
     private final TrophyRepository trophyRepository;
+    private final ClassRoomRepository classRoomRepository;
+
+    //private final ClassRoomRepository classRoomRepository;
     public void unlockSkin(UUID studentId, UUID skinId) {
         Student student = studentRepository.findById(studentId).orElseThrow(
                 ()-> new RuntimeException("Estudante Não Encontrado")
@@ -55,4 +52,21 @@ public class StudentService {
         student.getTrophies().add(trophy);
         studentRepository.save(student);
     }
+
+    public void linkStudentToClassRoom(UUID studentId, String classRoomId) {
+        Student student = studentRepository.findById(studentId).orElseThrow(
+                ()-> new RuntimeException("Aluno não encontrado")
+        );
+        System.out.println("Buscando sala com código: " + classRoomId);
+
+        ClassRoom classroom = classRoomRepository.findByCode(classRoomId).orElseThrow(()->new RuntimeException("Sala nao encontrada"));
+
+
+
+        classroom.addStudent(student);
+
+        classRoomRepository.save(classroom);
+        studentRepository.save(student);
+    }
+
 }

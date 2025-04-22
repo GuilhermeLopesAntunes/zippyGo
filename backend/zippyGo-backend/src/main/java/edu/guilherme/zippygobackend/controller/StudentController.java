@@ -1,14 +1,13 @@
 package edu.guilherme.zippygobackend.controller;
 
+import edu.guilherme.zippygobackend.dto.ClassRoomIdRequest;
 import edu.guilherme.zippygobackend.repository.StudentRepository;
 import edu.guilherme.zippygobackend.service.StudentService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -44,5 +43,11 @@ public class StudentController {
     ){
         studentService.unlockTrophies(studentId, trophyId);
         return ResponseEntity.ok("Unlocked trophy");
+    }
+
+    @PostMapping("/{studentId}/link-class")
+    public ResponseEntity<String> linkClassRoom(@PathVariable UUID studentId, @RequestBody ClassRoomIdRequest request) {
+        studentService.linkStudentToClassRoom(studentId,request.classRoomId());
+        return ResponseEntity.ok("Linked class room");
     }
 }
