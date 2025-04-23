@@ -36,4 +36,26 @@ public class Professor extends User {
             student.getProfessors().remove(this);
         }
     }
+
+    public void addClassRoom(ClassRoom classRoom) {
+        if(classRoom != null && !classrooms.contains(classRoom)) {
+            this.classrooms.add(classRoom);
+            classRoom.getProfessors().add(this);
+        }
+    }
+    public void removeClassRoom(ClassRoom classRoom) {
+        if(classRoom != null && !classrooms.contains(classRoom)) {
+            this.classrooms.remove(classRoom);
+            classRoom.getProfessors().remove(this);
+        }
+    }
+
+    @ManyToMany
+    @JoinTable(
+            name = "professor_classroom",
+            joinColumns = @JoinColumn(name = "professor_id"),
+            inverseJoinColumns = @JoinColumn(name = "classroom_id")
+
+    )
+    private Set<ClassRoom> classrooms = new HashSet<>();
 }

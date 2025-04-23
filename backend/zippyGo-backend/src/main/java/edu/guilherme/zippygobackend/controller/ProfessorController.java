@@ -1,9 +1,11 @@
 package edu.guilherme.zippygobackend.controller;
 
+import edu.guilherme.zippygobackend.dto.ClassRoomsAssociationRequest;
 import edu.guilherme.zippygobackend.dto.StudentAssociationRequest;
 import edu.guilherme.zippygobackend.model.Student;
 import edu.guilherme.zippygobackend.service.ProfessorService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,23 @@ public class ProfessorController {
             @RequestBody StudentAssociationRequest request
     ) {
         professorService.unlinkProfessorFromStudents(professorId, request.studentIds());
+        return ResponseEntity.ok("Alunos removidos com sucesso");
+    }
+
+    @PostMapping("/{professorId}/classroom")
+    public ResponseEntity<String> addClassRoomToProfessor(
+            @PathVariable UUID professorId,
+            @RequestBody ClassRoomsAssociationRequest request
+            ){
+        professorService.linkProfessorFromClassRoom(professorId,request.classRoomId());
+        return ResponseEntity.ok("Salas de aula adicionadas com sucesso");
+    }
+    @DeleteMapping("/{professorId}/classroom")
+    public ResponseEntity<String> removeClassRoomFromProfessor(
+            @PathVariable UUID professorId,
+            @RequestBody ClassRoomsAssociationRequest request
+    ){
+        professorService.unlinkProfessorFromClassRoom(professorId,request.classRoomId());
         return ResponseEntity.ok("Alunos removidos com sucesso");
     }
 }

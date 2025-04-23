@@ -24,6 +24,9 @@ public class ClassRoom {
     @JsonManagedReference  // Adiciona aqui para evitar o loop infinito
     private Set<Student> students = new HashSet<>();
 
+    @ManyToMany(mappedBy = "classrooms")
+    private Set<Professor> professors = new HashSet<>();
+
     public void addStudent(Student student) {
         students.add(student);
         student.setClassroom(this);
