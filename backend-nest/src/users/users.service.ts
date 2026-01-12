@@ -3,7 +3,7 @@ import { Repository } from "typeorm";
 import { Student } from "./entities/student.entity";
 import { Professor } from "./entities/professor.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserRole } from "./entities/user.entity";
+import { User, UserRole } from "./entities/user.entity";
 
 @Injectable()
 export class UsersService {
@@ -12,6 +12,8 @@ export class UsersService {
     private readonly studentRepository: Repository<Student>,
     @InjectRepository(Professor)
     private readonly professorRepository: Repository<Professor>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
   async findById(id: number): Promise<Student | Professor> {
     const student = await this.studentRepository.findOne({
@@ -80,5 +82,20 @@ export class UsersService {
     }
 
     throw new BadRequestException('Usuário sem papel definido');
+  }
+
+  async createBasicUser(data: {
+    fullName: string;
+    username: string;
+    password: string;
+  }): Promise<User> {
+    const user = this.userRepository.create({
+      fullName: data.fullName,
+      username: data.username,
+      password: data.password,
+      role: null,
+      active: true,
+    });
+    return this.userRepository.save(user);
   }
 }

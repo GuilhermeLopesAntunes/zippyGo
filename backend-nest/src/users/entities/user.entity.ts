@@ -9,7 +9,7 @@ export enum UserRole {
 @TableInheritance({
   column: {
     type: 'varchar',
-    name: 'role',
+    name: 'type',
   },
 })
 export abstract class User {
@@ -17,6 +17,8 @@ export abstract class User {
   id: number;
   @Column({ unique: true })
   username: string;
+  @Column()
+  fullName: string;
   @Column()
   password: string;
   @Column({
