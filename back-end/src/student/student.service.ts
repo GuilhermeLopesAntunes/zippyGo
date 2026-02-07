@@ -11,7 +11,7 @@ export class StudentService {
   async create(dto: CreateStudentDto) {
     return this.prisma.prismaClient.student.create({
         data: {
-            id: dto.userId, 
+            user: { connect: { id: dto.userId } },
             level: dto.level,
             currentXp: dto.currentXp,
             totalXp: dto.totalXp,
@@ -19,7 +19,7 @@ export class StudentService {
             rank: dto.rank,
             ruby: dto.ruby,
         },
-        });
+    });
   }
 
   async findAll() {
