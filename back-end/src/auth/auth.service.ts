@@ -1,0 +1,44 @@
+// src/auth/auth.service.ts
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service.js';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
+
+  // Registro de usuário
+  async register(username: string, password: string, fullName: string) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await this.prisma.prismaClient.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+        fullName,
+      },
+    });
+    return { id: user.id, username: user.username };
+  }
+
+  // Login
+  async login(username: string, password: string) {
+    const user = await this.prisma.prismaClient.user.findUnique({
+      where: { username },
+    });
+
+    if (!user) throw new UnauthorizedException('Usuário não encontrado');
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid)
+      throw new UnauthorizedException('Senha inválida');
+
+    const payload = { sub: user.id, username: user.username };
+    const token = this.jwtService.sign(payload);
+
+    return { access_token: token };
+  }
+}
