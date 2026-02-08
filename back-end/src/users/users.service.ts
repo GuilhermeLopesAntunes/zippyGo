@@ -9,16 +9,6 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    return this.prisma.prismaClient.user.create({
-      data: {
-        ...createUserDto,
-        password: hashedPassword,
-      },
-    });
-  }
-
   async findAll() {
     return this.prisma.prismaClient.user.findMany();
   }

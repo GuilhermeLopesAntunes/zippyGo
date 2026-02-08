@@ -11,7 +11,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // Registro de usuário
   async register(username: string, password: string, fullName: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.prisma.prismaClient.user.create({
@@ -24,7 +23,6 @@ export class AuthService {
     return { id: user.id, username: user.username };
   }
 
-  // Login
   async login(username: string, password: string) {
     const user = await this.prisma.prismaClient.user.findUnique({
       where: { username },
