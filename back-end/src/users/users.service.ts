@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
+   
   async findAll() {
     return this.prisma.prismaClient.user.findMany();
   }
@@ -20,6 +21,14 @@ export class UsersService {
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
+ async findByName(username: string) {
+    const user = await this.prisma.prismaClient.user.findUnique({
+      where: { username },
+    })
+    if(!user) false
+    return true;
+  }
+ 
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     return this.prisma.prismaClient.user.update({

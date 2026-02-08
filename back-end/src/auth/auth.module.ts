@@ -5,9 +5,11 @@ import { PrismaModule } from '../prisma/prisma.module.js';
 import { AuthService } from './auth.service.js';
 import { JwtStrategy } from './jwt.strategy.js';
 import { AuthController } from './auth.controller.js';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
     PrismaModule,
     PassportModule,
     JwtModule.register({
