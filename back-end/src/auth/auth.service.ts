@@ -4,22 +4,22 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private userService: UsersService,
   ) {}
 
-  async register(username: string, password: string, fullName: string) {
-        const hashedPassword = await bcrypt.hash(password, 10);  
+  async register(createUserDto: CreateUserDto) {
+        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);  
         const user = await this.prisma.prismaClient.user.create({
           data: {
-            username,
+            username: createUserDto.username,
             password: hashedPassword,
-            fullName,
+            fullName: createUserDto.fullName,
           },
         });
         return { id: user.id, username: user.username };

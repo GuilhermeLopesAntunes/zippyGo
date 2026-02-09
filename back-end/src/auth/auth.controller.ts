@@ -1,18 +1,19 @@
 // src/auth/auth.controller.ts
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService
+  ) {}
 
   @Post('register')
   register(
-    @Body('username') username: string,
-    @Body('password') password: string,
-    @Body('fullName') fullName: string,
+    @Body() createUserDto: CreateUserDto
   ) {
-    return this.authService.register(username, password, fullName);
+    return this.authService.register(createUserDto);
   }
 
   @Post('login')

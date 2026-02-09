@@ -7,6 +7,6 @@ export class CreateStudentDto {
   currentXp: number;
   totalXp: number;
   levelProgress: number;
-  rank: number;
+  rank: string;
   ruby: number;
 }

@@ -11,7 +11,7 @@ model User {
   username  String   @unique
   password  String
   fullName  String
-  avatarUrl String?
+  email     String?
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -28,8 +28,9 @@ model Student {
   currentXp     Int
   totalXp       Int
   levelProgress Float
-  rank          Int
+  rank          String
   ruby          Int
+  avatarUrl String?
 }
 
 model Professor {
