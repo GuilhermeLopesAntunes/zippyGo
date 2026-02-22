@@ -14,10 +14,6 @@ const Registro = ()=>
         
             <Header register />
             <RegisterForm  />
-           
-            
-            
-            
          
         </div>
     )

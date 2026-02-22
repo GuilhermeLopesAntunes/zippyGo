@@ -16,6 +16,9 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  schoolId  String?
+  school    School? @relation(fields: [schoolId], references: [id])
+
   student   Student?
   professor Professor?
 }
@@ -24,18 +27,30 @@ model Student {
   id            String @id @default(uuid())
   userId        String @unique
   user          User   @relation(fields: [userId], references: [id])
+
   level         Int
   currentXp     Int
   totalXp       Int
   levelProgress Float
   rank          String
   ruby          Int
-  avatarUrl String?
+  avatarUrl     String?
 }
 
 model Professor {
-  id            String @id @default(uuid())
-  userId        String @unique
-  user          User   @relation(fields: [userId], references: [id])
+  id             String @id @default(uuid())
+  userId         String @unique
+  user           User   @relation(fields: [userId], references: [id])
+
   specialization String
+}
+
+model School {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  users     User[]
 }

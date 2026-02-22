@@ -18,7 +18,6 @@ import userIcon from "../../../../public/incons/UserIcon.svg"
 import MailIcon from "../../../../public/incons/MailIcon.svg"
 import PasswordIcon from "../../../../public/incons/PasswordIcon.svg"
 
-// ---------------------- Tipos -------------------------
 
 type User = { username: string, email: string }
 type RegisterData = {
@@ -29,7 +28,7 @@ type RegisterData = {
   roomCode: string
 }
 
-// ---------------------- Componente -------------------------
+
 
 export default function RegisterForm() {
 
