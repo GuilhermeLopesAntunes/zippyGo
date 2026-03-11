@@ -1,6 +1,6 @@
 // src/student/student.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service.js';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { Rank } from 'src/enums/ranks.enum';
@@ -13,6 +13,7 @@ export class StudentService {
     return this.prisma.prismaClient.student.create({
         data: {
             user: { connect: { id: dto.userId } },
+            classroom: { connect: { id: dto.classroomId } },
             level: 1,
             currentXp: 0,
             totalXp: 0,

@@ -1,24 +1,30 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { PrismaModule } from '../prisma/prisma.module.js';
-import { AuthService } from './auth.service.js';
-import { JwtStrategy } from './jwt.strategy.js';
-import { AuthController } from './auth.controller.js';
+import { PrismaModule } from '../prisma/prisma.module';
+import { AuthService } from './auth.service';
+import { AuthController } from './auth.controller';
 import { UsersModule } from 'src/users/users.module';
-
+import { ConfigModule } from '@nestjs/config';
+import jwtConfig from './config/jwt.config';
+import { HashingService } from './hashing/hashing.service';
+import { BcryptService } from './hashing/bcrypt.service';
+import { Global } from '@nestjs/common';
+@Global()
 @Module({
   imports: [
     UsersModule,
+    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
     PrismaModule,
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: Number(process.env.JWT_EXPIRES_IN || 3600)  },
-    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [AuthService],
+  providers: [{
+      provide: HashingService,
+      useClass: BcryptService,
+    },
+    AuthService,],
+  exports: [HashingService, JwtModule, ConfigModule],
 })
 export class AuthModule {}

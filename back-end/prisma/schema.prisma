@@ -28,6 +28,9 @@ model Student {
   userId        String @unique
   user          User   @relation(fields: [userId], references: [id])
 
+  classroomId   String
+  classroom     ClassRoom @relation(fields: [classroomId], references: [id])
+
   level         Int
   currentXp     Int
   totalXp       Int
@@ -37,12 +40,15 @@ model Student {
   avatarUrl     String?
 }
 
+
 model Professor {
   id             String @id @default(uuid())
   userId         String @unique
   user           User   @relation(fields: [userId], references: [id])
 
   specialization String
+
+  subjects       ClassSubject[]
 }
 
 model School {
@@ -52,5 +58,42 @@ model School {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  users     User[]
+  users      User[]
+  classrooms ClassRoom[]
+}
+
+model ClassRoom {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  schoolId  String
+  school    School   @relation(fields: [schoolId], references: [id])
+
+  students  Student[]
+  subjects  ClassSubject[]
+}
+
+model Subject {
+  id   String @id @default(uuid())
+  name String
+
+  classes ClassSubject[]
+}
+
+model ClassSubject {
+  id String @id @default(uuid())
+
+  classroomId String
+  classroom   ClassRoom @relation(fields: [classroomId], references: [id])
+
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id])
+
+  professorId String
+  professor   Professor @relation(fields: [professorId], references: [id])
+
+  @@unique([classroomId, subjectId])
 }

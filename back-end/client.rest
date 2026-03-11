@@ -1,0 +1,301 @@
+@baseUrl = http://localhost:3001
+
+# Manual variables (no school routes exist yet)
+@schoolId = PUT_EXISTING_SCHOOL_ID_HERE
+@schoolCode = "CLASS-A"
+@profSecretCode = professor_2026_secret
+
+###
+# Health
+GET {{baseUrl}}/
+
+###
+# @name RegisterProfessorUser
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "prof.user",
+  "password": "123456",
+  "fullName": "Professor User"
+}
+
+###
+# @name LoginProfessorUser
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "prof.user",
+  "password": "123456"
+}
+
+###
+@profToken = {{LoginProfessorUser.response.body.access_token}}
+
+###
+# Promote logged user -> professor (requires schoolCode + secret code)
+# @name PromoteProfessor
+POST {{baseUrl}}/users/promote
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+{
+  "role": "professor",
+  "schoolCode": "{{schoolCode}}",
+  "specialization": "Math",
+  "professorSecretCode": "{{profSecretCode}}"
+}
+
+###
+# @name RegisterStudentUser
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "student.users",
+  "password": "123456",
+  "fullName": "Student User"
+}
+
+###
+# @name LoginStudentUser
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "student.users",
+  "password": "123456"
+}
+
+###
+@studentToken = {{LoginStudentUser.response.body.access_token}}
+
+###
+# Create Subject (needed before class-subject)
+# @name CreateSubject
+POST {{baseUrl}}/subjects
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+
+{
+  "name": "Mathematics"
+}
+
+###
+@subjectId = {{CreateSubject.response.body.id}}
+
+###
+# Create Classroom (needs schoolId)
+# @name CreateClassroom
+POST {{baseUrl}}/classrooms
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+
+{
+  "name": "Class A",
+  "code": "CLASS-A",
+  "schoolId": "{{schoolId}}"
+}
+
+###
+@classroomId = {{CreateClassroom.response.body.id}}
+@classroomCode = {{CreateClassroom.response.body.code}}
+
+###
+# Promote logged user -> student (links school automatically by classroom code)
+# @name PromoteStudent
+POST {{baseUrl}}/users/promote
+Authorization: Bearer {{studentToken}}
+Content-Type: application/json
+
+{
+  "role": "student",
+  "classroomCode": "{{classroomCode}}"
+}
+
+###
+# List Professors and get one id for class-subject
+# @name ListProfessors
+GET {{baseUrl}}/professor
+Authorization: Bearer {{profToken}}
+
+###
+# Set this after reading ListProfessors response
+@professorId = PUT_PROFESSOR_ID_HERE
+
+###
+# Create relation classroom + subject + professor
+# @name CreateClassSubject
+POST {{baseUrl}}/class-subjects
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+
+{
+  "classroomId": "{{classroomId}}",
+  "subjectId": "{{subjectId}}",
+  "professorId": "{{professorId}}"
+}
+
+###
+@classSubjectId = {{CreateClassSubject.response.body.id}}
+
+###
+# Users routes
+GET {{baseUrl}}/users
+
+###
+# @name GetUserById
+GET {{baseUrl}}/users/{{RegisterProfessorUser.response.body.id}}
+
+###
+PATCH {{baseUrl}}/users/{{RegisterProfessorUser.response.body.id}}
+Content-Type: application/json
+
+{
+  "fullName": "Professor User Updated"
+}
+
+###
+DELETE {{baseUrl}}/users/PUT_USER_ID_HERE
+
+###
+GET {{baseUrl}}/users/me
+Authorization: Bearer {{profToken}}
+
+###
+# Professor routes
+GET {{baseUrl}}/professor
+Authorization: Bearer {{profToken}}
+
+###
+GET {{baseUrl}}/professor/{{professorId}}
+Authorization: Bearer {{profToken}}
+
+###
+PATCH {{baseUrl}}/professor/{{professorId}}
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+
+{
+  "specialization": "Physics"
+}
+
+###
+DELETE {{baseUrl}}/professor/PUT_PROFESSOR_ID_TO_DELETE
+Authorization: Bearer {{profToken}}
+
+###
+# Student routes
+GET {{baseUrl}}/students
+Authorization: Bearer {{studentToken}}
+
+###
+# Set this after reading students list
+@studentId = PUT_STUDENT_ID_HERE
+
+###
+GET {{baseUrl}}/students/{{studentId}}
+Authorization: Bearer {{studentToken}}
+
+###
+PATCH {{baseUrl}}/students/{{studentId}}
+Authorization: Bearer {{studentToken}}
+Content-Type: application/json
+
+{
+  "level": 2,
+  "ruby": 50
+}
+
+###
+DELETE {{baseUrl}}/students/PUT_STUDENT_ID_TO_DELETE
+Authorization: Bearer {{studentToken}}
+
+###
+# Subject routes
+GET {{baseUrl}}/subjects
+Authorization: Bearer {{profToken}}
+
+###
+GET {{baseUrl}}/subjects/{{subjectId}}
+Authorization: Bearer {{profToken}}
+
+###
+PATCH {{baseUrl}}/subjects/{{subjectId}}
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+
+{
+  "name": "Advanced Mathematics"
+}
+
+###
+DELETE {{baseUrl}}/subjects/PUT_SUBJECT_ID_TO_DELETE
+Authorization: Bearer {{profToken}}
+
+###
+# Classroom routes
+GET {{baseUrl}}/classrooms
+Authorization: Bearer {{profToken}}
+
+###
+GET {{baseUrl}}/classrooms/{{classroomId}}
+Authorization: Bearer {{profToken}}
+
+###
+PATCH {{baseUrl}}/classrooms/{{classroomId}}
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+
+{
+  "name": "Class A - Updated"
+}
+
+###
+DELETE {{baseUrl}}/classrooms/PUT_CLASSROOM_ID_TO_DELETE
+Authorization: Bearer {{profToken}}
+
+###
+# Class-subject routes
+GET {{baseUrl}}/class-subjects
+Authorization: Bearer {{profToken}}
+
+###
+GET {{baseUrl}}/class-subjects/{{classSubjectId}}
+Authorization: Bearer {{profToken}}
+
+###
+PATCH {{baseUrl}}/class-subjects/{{classSubjectId}}
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+
+{
+  "professorId": "{{professorId}}"
+}
+
+###
+DELETE {{baseUrl}}/class-subjects/PUT_CLASS_SUBJECT_ID_TO_DELETE
+Authorization: Bearer {{profToken}}
+
+###
+# Legacy direct creation routes (optional, bypass promote flow)
+# @name DirectCreateProfessor
+POST {{baseUrl}}/professor
+Authorization: Bearer {{profToken}}
+Content-Type: application/json
+
+{
+  "userId": "{{RegisterProfessorUser.response.body.id}}",
+  "specialization": "Chemistry"
+}
+
+###
+# @name DirectCreateStudent
+POST {{baseUrl}}/students
+Authorization: Bearer {{studentToken}}
+Content-Type: application/json
+
+{
+  "userId": "{{RegisterStudentUser.response.body.id}}",
+  "classroomId": "{{classroomId}}"
+}

@@ -1,11 +1,12 @@
 // src/student/student.controller.ts
 import { Controller, Get, Post, Body, Param, Patch, Delete, UseGuards } from '@nestjs/common';
-import { StudentService } from './student.service.js';
-import { JwtAuthGuard } from '../auth/guards/auth.guard.js';
-import { CreateStudentDto } from './dto/create-student.dto.js';
-import { UpdateStudentDto } from './dto/update-student.dto.js';
+import { StudentService } from './student.service';
+import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 
-@UseGuards(JwtAuthGuard)
+import { CreateStudentDto } from './dto/create-student.dto';
+import { UpdateStudentDto } from './dto/update-student.dto';
+
+@UseGuards(AuthTokenGuard)
 @Controller('students')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}

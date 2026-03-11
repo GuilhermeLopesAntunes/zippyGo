@@ -7,14 +7,24 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module'; 
 import { StudentModule } from './student/student.module';
 import { ProfessorModule } from './professor/professor.module';
+import { ClassroomModule } from './classroom/classroom.module';
+import { SubjectModule } from './subject/subject.module';
+import { ClassSubjectModule } from './class-subject/class-subject.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     AuthModule,
     PrismaModule,
     UsersModule,     
     StudentModule,
-    ProfessorModule
+    ProfessorModule,
+    ClassroomModule,
+    SubjectModule,
+    ClassSubjectModule
   ],
   controllers: [AppController], 
   providers: [AppService]       
