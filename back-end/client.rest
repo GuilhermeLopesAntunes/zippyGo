@@ -16,6 +16,7 @@ Content-Type: application/json
 
 {
   "username": "prof.user",
+  "email": "teste@gmail.com"
   "password": "123456",
   "fullName": "Professor User"
 }

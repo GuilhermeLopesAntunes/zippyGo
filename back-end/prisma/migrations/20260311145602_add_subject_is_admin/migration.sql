@@ -1,11 +1,22 @@
 /*
   Warnings:
 
-  - Added the required column `classroomId` to the `Student` table without a default value. This is not possible if the table is not empty.
+  - You are about to drop the `Classroom` table. If the table is not empty, all the data it contains will be lost.
+  - Made the column `classroomId` on table `Student` required. This step will fail if there are existing NULL values in that column.
 
 */
+-- DropForeignKey
+ALTER TABLE "Classroom" DROP CONSTRAINT "Classroom_schoolId_fkey";
+
+-- DropForeignKey
+ALTER TABLE "Student" DROP CONSTRAINT "Student_classroomId_fkey";
+
 -- AlterTable
-ALTER TABLE "Student" ADD COLUMN     "classroomId" TEXT NOT NULL;
+ALTER TABLE "Student" ADD COLUMN     "avatarUrl" TEXT,
+ALTER COLUMN "classroomId" SET NOT NULL;
+
+-- DropTable
+DROP TABLE "Classroom";
 
 -- CreateTable
 CREATE TABLE "ClassRoom" (

@@ -1,7 +1,7 @@
 import { RoutePolices } from '../enum/route-policies.enum';
 
 export class TokenPayloadDto {
-  sub: number;
+  sub: string;
   email: string;
   routePolicies: RoutePolices;
   iat: number;

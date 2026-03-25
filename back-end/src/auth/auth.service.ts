@@ -17,7 +17,9 @@ export class AuthService {
         const hashedPassword = await bcrypt.hash(createUserDto.password, 10);  
         const user = await this.prisma.prismaClient.user.create({
           data: {
+            
             username: createUserDto.username,
+            email: createUserDto.email,
             password: hashedPassword,
             fullName: createUserDto.fullName,
           },
@@ -36,7 +38,8 @@ export class AuthService {
     if (!isPasswordValid)
       throw new UnauthorizedException('Senha inválida');
 
-    const payload = { sub: user.id, username: user.username };
+    const payload = { sub: user.id, username: user.username, isAdmin: user.isAdmin};
+    console.log(payload)
     const token = this.jwtService.sign(payload);
 
     return { access_token: token };
